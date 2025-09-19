@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
-import { authenticated } from '../../access/authenticated'
+import { authenticated } from '@/access/authenticated'
+import { US_STATES } from "@/constants/us-states";
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -21,6 +22,37 @@ export const Users: CollectionConfig = {
       name: 'name',
       type: 'text',
     },
+    {
+      name: 'email',
+      type: 'email',
+    },
+    {
+      name: 'phone',
+      type: 'text',
+    },
+    {
+      name: 'address',
+      type: 'group',
+      fields: [
+        {
+          name: 'street',
+          type: 'text',
+        },
+        {
+          name: 'city',
+          type: 'text',
+        },
+        {
+          name: 'state',
+          type: 'select',
+          options: US_STATES
+        },
+        {
+          name: 'zip',
+          type: 'number'
+        }
+      ]
+    }
   ],
   timestamps: true,
 }
