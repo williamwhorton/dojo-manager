@@ -446,10 +446,11 @@ export interface Category {
  */
 export interface User {
   id: number;
-  name?: {
+  fullName?: string | null;
+  name: {
     prefix?: ('Mr.' | 'Mrs.' | 'Ms.' | 'Dr.' | 'Prof.') | null;
-    firstName?: string | null;
-    lastName?: string | null;
+    firstName: string;
+    lastName: string;
     suffix?: ('Jr.' | 'Sr.' | 'I' | 'II' | 'III' | 'IV' | 'V' | 'MD' | 'DDS' | 'PhD' | 'DVM') | null;
   };
   phone?: string | null;
@@ -1534,6 +1535,7 @@ export interface CategoriesSelect<T extends boolean = true> {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  fullName?: T;
   name?:
     | T
     | {

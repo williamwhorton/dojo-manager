@@ -15,10 +15,30 @@ export const Users: CollectionConfig = {
   },
   admin: {
     defaultColumns: ['name', 'email'],
-    useAsTitle: 'name',
+    useAsTitle: 'fullName',
   },
   auth: true,
   fields: [
+    {
+      name: 'fullName',
+      type: 'text',
+      admin: {
+        hidden: true, // hides the field from the admin panel
+      },
+      hooks: {
+        beforeChange: [
+          ({ siblingData }) => {
+            // ensures data is not stored in DB
+            delete siblingData['fullName']
+          }
+        ],
+        afterRead: [
+          ({ data }) => {
+            return `${data?.name.prefix} ${data?.name.firstName} ${data?.name.lastName} ${data?.name.suffix}`;
+          }
+        ],
+      },
+    },
     {
       name: 'name',
       type: 'group',
@@ -30,11 +50,13 @@ export const Users: CollectionConfig = {
         },
         {
           name: 'firstName',
-          type: 'text'
+          type: 'text',
+          required: true
         },
         {
           name: 'lastName',
-          type: 'text'
+          type: 'text',
+          required: true
         },
         {
           name: 'suffix',
