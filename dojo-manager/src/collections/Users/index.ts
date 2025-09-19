@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { US_STATES } from "@/constants/us-states";
+import { PREFIXES, SUFFIXES } from "@/constants/name";
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -20,7 +21,27 @@ export const Users: CollectionConfig = {
   fields: [
     {
       name: 'name',
-      type: 'text',
+      type: 'group',
+      fields: [
+        {
+          name: 'prefix',
+          type: 'select',
+          options: PREFIXES
+        },
+        {
+          name: 'firstName',
+          type: 'text'
+        },
+        {
+          name: 'lastName',
+          type: 'text'
+        },
+        {
+          name: 'suffix',
+          type: 'select',
+          options: SUFFIXES
+        }
+      ]
     },
     {
       name: 'email',
@@ -52,7 +73,28 @@ export const Users: CollectionConfig = {
           type: 'number'
         }
       ]
+    },
+    {
+      name: 'programs',
+      type: 'array',
+      fields: [
+        {
+          name: 'program',
+          type: 'relationship',
+          relationTo: 'programs'
+        },
+        {
+          name: 'belt',
+          type: 'relationship',
+          relationTo: 'belts'
+        },
+        {
+          name: 'numberOfClassesAttended',
+          type: 'number'
+        }
+      ]
     }
+
   ],
   timestamps: true,
 }

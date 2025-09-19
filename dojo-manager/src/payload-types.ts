@@ -446,7 +446,12 @@ export interface Category {
  */
 export interface User {
   id: number;
-  name?: string | null;
+  name?: {
+    prefix?: ('Mr.' | 'Mrs.' | 'Ms.' | 'Dr.' | 'Prof.') | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    suffix?: ('Jr.' | 'Sr.' | 'I' | 'II' | 'III' | 'IV' | 'V' | 'MD' | 'DDS' | 'PhD' | 'DVM') | null;
+  };
   phone?: string | null;
   address?: {
     street?: string | null;
@@ -508,6 +513,64 @@ export interface User {
       | null;
     zip?: number | null;
   };
+  programs?:
+    | {
+        program?: (number | null) | Program;
+        belt?: (number | null) | Belt;
+        numberOfClassesAttended?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs".
+ */
+export interface Program {
+  id: number;
+  name?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "belts".
+ */
+export interface Belt {
+  id: number;
+  level?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -870,62 +933,12 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "belts".
- */
-export interface Belt {
-  id: number;
-  level?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "classes".
  */
 export interface Class {
   id: number;
   name?: string | null;
   program?: (number | null) | Program;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "programs".
- */
-export interface Program {
-  id: number;
-  name?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -1521,7 +1534,14 @@ export interface CategoriesSelect<T extends boolean = true> {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  name?: T;
+  name?:
+    | T
+    | {
+        prefix?: T;
+        firstName?: T;
+        lastName?: T;
+        suffix?: T;
+      };
   phone?: T;
   address?:
     | T
@@ -1530,6 +1550,14 @@ export interface UsersSelect<T extends boolean = true> {
         city?: T;
         state?: T;
         zip?: T;
+      };
+  programs?:
+    | T
+    | {
+        program?: T;
+        belt?: T;
+        numberOfClassesAttended?: T;
+        id?: T;
       };
   updatedAt?: T;
   createdAt?: T;
