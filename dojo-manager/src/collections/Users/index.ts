@@ -10,11 +10,11 @@ export const Users: CollectionConfig = {
     admin: authenticated,
     create: authenticated,
     delete: authenticated,
-    read: authenticated,
+    read: ( () => true),
     update: authenticated,
   },
   admin: {
-    defaultColumns: ['name', 'email'],
+    defaultColumns: ['name.lastName', 'name.firstName', 'email', 'phone'],
     useAsTitle: 'fullName',
   },
   auth: true,
@@ -34,7 +34,7 @@ export const Users: CollectionConfig = {
         ],
         afterRead: [
           ({ data }) => {
-            return `${data?.name.prefix} ${data?.name.firstName} ${data?.name.lastName} ${data?.name.suffix}`;
+            return `${data?.name.prefix || ''} ${data?.name.firstName} ${data?.name.lastName} ${data?.name.suffix || ''}`;
           }
         ],
       },
@@ -118,5 +118,8 @@ export const Users: CollectionConfig = {
     }
 
   ],
+  hooks: {
+    afterChange: [({ data }) => console.log(data)]
+  },
   timestamps: true,
 }

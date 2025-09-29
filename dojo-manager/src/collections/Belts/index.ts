@@ -14,13 +14,12 @@ export const Belts: CollectionConfig = {
     defaultColumns: ['level'],
     useAsTitle: 'level',
   },
-  auth: true,
   fields: [
     {
       name: 'level',
       type: 'text'
     },
-    
+
   ]
 
 }
