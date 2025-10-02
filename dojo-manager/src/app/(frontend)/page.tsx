@@ -2,21 +2,15 @@
 
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import PageClient from "@/app/(frontend)/page.client";
-
+import { Home } from '@/Home/Component';
 
 const payload = await getPayload({ config })
-const students = await payload.find({ collection: 'users' })
 
 
-export default async function Home() {
+export default async function Page() {
   return (
-    <div>
-      <h1>Home</h1>
-      { students.docs.map((student) => (
-        <div key={student.id}>{student.fullName}</div>
-      )) }
-      <PageClient />
+    <div className={'container'}>
+      <Home />
     </div>
   );
 }
