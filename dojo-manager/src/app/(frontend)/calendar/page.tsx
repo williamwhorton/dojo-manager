@@ -1,16 +1,17 @@
-'use server'
-
+import react from "react";
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { Home } from '@/Home/Component';
+import Calendar from "./calendar";
 
 const payload = await getPayload({ config })
 
-
 export default async function Page() {
+
   return (
     <div>
-      <Home />
+      <Calendar />
+
     </div>
-  );
+  )
+
 }

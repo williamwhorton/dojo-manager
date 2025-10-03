@@ -843,8 +843,16 @@ export interface Form {
  */
 export interface Class {
   id: number;
-  name?: string | null;
+  name: string;
   program?: (number | null) | Program;
+  section?:
+    | {
+        day?: ('Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday') | null;
+        startTime?: string | null;
+        endTime?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1458,6 +1466,14 @@ export interface BeltsSelect<T extends boolean = true> {
 export interface ClassesSelect<T extends boolean = true> {
   name?: T;
   program?: T;
+  section?:
+    | T
+    | {
+        day?: T;
+        startTime?: T;
+        endTime?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
