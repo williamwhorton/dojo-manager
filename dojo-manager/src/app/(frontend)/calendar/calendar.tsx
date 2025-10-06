@@ -1,9 +1,10 @@
 'use client';
 
 import React, { SetStateAction, useEffect, useState } from "react";
-import { eachDayOfInterval, addDays, format, startOfWeek } from "date-fns";
+import { eachDayOfInterval, addDays, format, startOfWeek, DateArg } from "date-fns";
 import { getClassSectionsByWeek } from "@/app/actions/getClassSectionsByWeek";
 import { DayPilot, DayPilotCalendar, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
+import { DAY_NAMES } from "@/constants/day-names";
 
 export default function Calendar() {
 
@@ -18,7 +19,7 @@ export default function Calendar() {
   const [config, setConfig] = useState(initialConfig);
   const [startDate, setStartDate] = useState(weekStart);
 
-  const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
 
   useEffect( () => {
     if ( !calendar || calendar?.disposed() ) {
@@ -87,7 +88,6 @@ export default function Calendar() {
 
   }, [ calendar, startDate ] );
 
-
   return (
     <div>
       <DayPilotNavigator
@@ -98,7 +98,7 @@ export default function Calendar() {
       <DayPilotCalendar
         {...config}
         controlRef={setCalendar}
-        startDate={startOfWeek(startDate)}
+        startDate={startDate as unknown as string}
       />
     </div>
   )
