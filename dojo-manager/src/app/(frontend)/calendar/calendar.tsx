@@ -56,6 +56,7 @@ export default function Calendar() {
 
     const createCalendarEvent = ( event: any, idx: number, formattedDate: string ): DayPilot.EventData => {
       const formattedEvent = formatEventDateTime( event, formattedDate );
+      console.log(formattedEvent.startTime.toLocaleString())
       return {
         id: idx,
         start: formattedEvent.startTime.toLocaleString(),
