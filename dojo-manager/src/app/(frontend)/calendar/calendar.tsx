@@ -14,7 +14,7 @@ export default function Calendar() {
   const weekStart = startOfWeek(Date.now());
   const initialConfig: DayPilot.CalendarConfig = {
     viewType: "Week",
-    startDate: weekStart.toString(),
+    startDate: weekStart.toLocaleString(),
     locale: "en-us"
   };
 
@@ -49,8 +49,8 @@ export default function Calendar() {
     const formatEventDateTime = ( event: any, formattedDate: string ) => {
       return {
         ...event,
-        startTime: `${formattedDate}T${event.startTime}`,
-        endTime: `${formattedDate}T${event.endTime}`
+        startTime: `${formattedDate}T${event.startTime.toLocaleString()}`,
+        endTime: `${formattedDate}T${event.endTime.toLocaleString()}`
       };
     };
 
@@ -123,7 +123,6 @@ export default function Calendar() {
           <Modal />
         </EventContext>
       }
-
     </div>
   )
 }
