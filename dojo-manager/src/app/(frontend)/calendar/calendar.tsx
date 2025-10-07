@@ -1,10 +1,13 @@
-'use client';
+'use client'
 
-import React, { SetStateAction, useEffect, useState } from "react";
-import { eachDayOfInterval, addDays, format, startOfWeek, DateArg } from "date-fns";
+import React, { SetStateAction, useEffect, useMemo, useState } from "react";
+import { eachDayOfInterval, addDays, format, startOfWeek } from "date-fns";
 import { getClassSectionsByWeek } from "@/app/actions/getClassSectionsByWeek";
 import { DayPilot, DayPilotCalendar, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
 import { DAY_NAMES } from "@/constants/day-names";
+import Modal from "@/components/Dialog/modal";
+
+export const EventContext = React.createContext<any>(null);
 
 export default function Calendar() {
 
@@ -18,7 +21,7 @@ export default function Calendar() {
   const [calendar, setCalendar] = useState<DayPilot.Calendar>();
   const [config, setConfig] = useState(initialConfig);
   const [startDate, setStartDate] = useState(weekStart);
-
+  const [modalData, setModalData] = useState<any>();
 
 
   useEffect( () => {
@@ -57,7 +60,7 @@ export default function Calendar() {
         id: idx,
         start: formattedEvent.startTime,
         end: formattedEvent.endTime,
-        text: event.name,
+        text: event.name
       };
     };
 
@@ -88,18 +91,39 @@ export default function Calendar() {
 
   }, [ calendar, startDate ] );
 
+  const handleEventClick = ( (event: { e: { data: any; }; }) => {
+    setModalData(event.e.data);
+  } )
+
+  const value = useMemo(
+    () => ({
+      modalData,
+      setModalData
+    }), [modalData]
+  )
+
   return (
-    <div>
-      <DayPilotNavigator
+    <div className="container flex flex-row gap-4">
+      <div>
+        <DayPilotNavigator
         onTimeRangeSelected={(args) => {
           setStartDate(startOfWeek(args.day as SetStateAction<any>));
         }}
-      />
-      <DayPilotCalendar
-        {...config}
-        controlRef={setCalendar}
-        startDate={startDate as unknown as string}
-      />
+      /></div>
+      <div>
+        <DayPilotCalendar
+          {...config}
+          controlRef={setCalendar}
+          startDate={startDate as unknown as string}
+          onEventClick={handleEventClick}
+        />
+      </div>
+      { modalData &&
+        <EventContext value={ value }>
+          <Modal />
+        </EventContext>
+      }
+
     </div>
   )
 }

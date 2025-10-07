@@ -1,4 +1,3 @@
-import react from "react";
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import Calendar from "./calendar";
@@ -10,8 +9,6 @@ export default async function Page() {
   return (
     <div>
       <Calendar />
-
     </div>
   )
-
 }
