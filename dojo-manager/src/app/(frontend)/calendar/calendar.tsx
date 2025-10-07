@@ -49,25 +49,29 @@ export default function Calendar() {
     const formatEventDateTime = ( event: any, formattedDate: string ) => {
       return {
         ...event,
-        startTime: `${formattedDate}T${event.startTime.toLocaleString()}`,
-        endTime: `${formattedDate}T${event.endTime.toLocaleString()}`
+        startTime: `${formattedDate}T${new Date(event.startTime).toLocaleTimeString( "en-US", {
+          hourCycle: "h24",
+          timeStyle: "medium"
+        })}`,
+        endTime: `${formattedDate}T${new Date(event.endTime).toLocaleTimeString( "en-US", {
+          hourCycle: "h24",
+          timeStyle: "medium"
+        })}`
       };
     };
 
     const createCalendarEvent = ( event: any, idx: number, formattedDate: string ): DayPilot.EventData => {
       const formattedEvent = formatEventDateTime( event, formattedDate );
-      console.log(formattedEvent.startTime.toLocaleString())
       return {
         id: idx,
-        start: formattedEvent.startTime.toLocaleString(),
-        end: formattedEvent.endTime.toLocaleString(),
+        start: formattedEvent.startTime,
+        end: formattedEvent.endTime,
         text: event.name
       };
     };
 
     const transformToCalendarEvents = ( events: any[] ): DayPilot.EventData[] => {
       return events.map( ( event, idx ) => {
-        console.log(event)
         const dayNumber = DAY_NAMES.indexOf( event.day as string );
         const week = eachDayOfInterval( {
           start: new Date( startDate ),
@@ -87,7 +91,6 @@ export default function Calendar() {
 
     getClassSectionsByWeek().then( ( data ) => {
       const flattenedEvents = flattenSections( data );
-      console.log(flattenedEvents)
       const calendarEvents = transformToCalendarEvents( flattenedEvents );
       calendar.update( { events: calendarEvents } );
     } );

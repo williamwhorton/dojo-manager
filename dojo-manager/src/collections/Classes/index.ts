@@ -67,16 +67,6 @@ export const Classes: CollectionConfig = {
         {
           name: 'startTime',
           type: 'date',
-          hooks: {
-            afterRead: [
-              ({ value }) => {
-                return new Date(value).toLocaleTimeString('en-US', {
-                  hourCycle: "h24",
-                  timeStyle: "medium"
-                });
-              }
-            ]
-          },
           admin: {
             date: {
               pickerAppearance: 'timeOnly'
@@ -86,16 +76,6 @@ export const Classes: CollectionConfig = {
         {
           name: 'endTime',
           type: 'date',
-          hooks: {
-            afterRead: [
-              ({ value }) => {
-                return new Date(value).toLocaleTimeString('en-US', {
-                  hourCycle: "h24",
-                  timeStyle: "medium"
-                });
-              }
-            ]
-          },
           admin: {
             date: {
               pickerAppearance: 'timeOnly'
