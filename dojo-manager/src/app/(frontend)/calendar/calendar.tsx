@@ -66,6 +66,7 @@ export default function Calendar() {
 
     const transformToCalendarEvents = ( events: any[] ): DayPilot.EventData[] => {
       return events.map( ( event, idx ) => {
+        console.log(event)
         const dayNumber = DAY_NAMES.indexOf( event.day as string );
         const week = eachDayOfInterval( {
           start: new Date( startDate ),
