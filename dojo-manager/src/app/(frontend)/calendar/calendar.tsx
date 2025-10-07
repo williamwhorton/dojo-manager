@@ -87,6 +87,7 @@ export default function Calendar() {
 
     getClassSectionsByWeek().then( ( data ) => {
       const flattenedEvents = flattenSections( data );
+      console.log(flattenedEvents)
       const calendarEvents = transformToCalendarEvents( flattenedEvents );
       calendar.update( { events: calendarEvents } );
     } );
