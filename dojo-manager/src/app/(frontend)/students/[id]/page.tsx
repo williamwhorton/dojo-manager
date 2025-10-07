@@ -25,15 +25,13 @@ export async function generateStaticParams() {
     },
   })
 
-  const params = pages.docs
-    ?.filter((doc) => {
+  return pages.docs
+    ?.filter( ( doc ) => {
       return doc.slug !== 'home'
-    })
-    .map(({ slug }) => {
+    } )
+    .map( ( { slug } ) => {
       return { slug }
-    })
-
-  return params
+    } )
 }
 
 type Args = {
@@ -42,14 +40,12 @@ type Args = {
   }>
 }
 
-export default async function Page({ params: paramsPromise }: Args) {
+export default async function Page({ params: paramsPromise }: Readonly<Args>) {
   const { isEnabled: draft } = await draftMode()
   const { slug = 'home' } = await paramsPromise
   const url = '/' + slug
 
-  let page: RequiredDataFromCollectionSlug<'pages'> | null
-
-  page = await queryPageBySlug({
+  const page: RequiredDataFromCollectionSlug<'pages'> | null = await queryPageBySlug({
     slug,
   })
 
