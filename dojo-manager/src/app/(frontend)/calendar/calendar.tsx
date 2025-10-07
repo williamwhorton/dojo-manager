@@ -19,7 +19,7 @@ export default function Calendar() {
   };
 
   const [calendar, setCalendar] = useState<DayPilot.Calendar>();
-  const [config, setConfig] = useState(initialConfig);
+  const [config] = useState(initialConfig);
   const [startDate, setStartDate] = useState(weekStart);
   const [modalData, setModalData] = useState<any>();
 
@@ -58,8 +58,8 @@ export default function Calendar() {
       const formattedEvent = formatEventDateTime( event, formattedDate );
       return {
         id: idx,
-        start: formattedEvent.startTime,
-        end: formattedEvent.endTime,
+        start: formattedEvent.startTime.toLocaleString(),
+        end: formattedEvent.endTime.toLocaleString(),
         text: event.name
       };
     };
