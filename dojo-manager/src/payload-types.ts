@@ -844,6 +844,21 @@ export interface Form {
 export interface Class {
   id: number;
   name: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   program?: (number | null) | Program;
   section?:
     | {
@@ -1465,6 +1480,7 @@ export interface BeltsSelect<T extends boolean = true> {
  */
 export interface ClassesSelect<T extends boolean = true> {
   name?: T;
+  description?: T;
   program?: T;
   section?:
     | T

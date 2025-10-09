@@ -1,121 +1,132 @@
 'use client'
 
-import React, { SetStateAction, useEffect, useMemo, useState } from "react";
-import { eachDayOfInterval, addDays, format, startOfWeek } from "date-fns";
-import { getClassSectionsByWeek } from "@/app/actions/getClassSectionsByWeek";
-import { DayPilot, DayPilotCalendar, DayPilotNavigator } from "@daypilot/daypilot-lite-react";
-import { DAY_NAMES } from "@/constants/day-names";
-import Modal from "@/components/Dialog/modal";
+import React, { SetStateAction, useEffect, useMemo, useState } from 'react'
+import { eachDayOfInterval, addDays, format, startOfWeek } from 'date-fns'
+import { getClassSectionsByWeek } from '@/app/actions/getClassSectionsByWeek'
+import { DayPilot, DayPilotCalendar, DayPilotNavigator } from '@daypilot/daypilot-lite-react'
+import { DAY_NAMES } from '@/constants/day-names'
+import Modal from '@/components/Dialog/modal'
+import { getClassSectionByID } from '@/app/actions/getClassSectionById'
 
-export const EventContext = React.createContext<any>(null);
+export const EventContext = React.createContext<any>(null)
 
 export default function Calendar() {
-
-  const weekStart = startOfWeek(Date.now());
+  const weekStart = startOfWeek(Date.now())
   const initialConfig: DayPilot.CalendarConfig = {
-    viewType: "Week",
+    viewType: 'Week',
     startDate: weekStart.toLocaleString(),
-    locale: "en-us"
-  };
+    locale: 'en-us',
+  }
 
-  const [calendar, setCalendar] = useState<DayPilot.Calendar>();
-  const [config] = useState(initialConfig);
-  const [startDate, setStartDate] = useState(weekStart);
-  const [modalData, setModalData] = useState<any>();
+  const [calendar, setCalendar] = useState<DayPilot.Calendar>()
+  const [config] = useState(initialConfig)
+  const [startDate, setStartDate] = useState(weekStart)
+  const [modalData, setModalData] = useState<any>()
 
-
-  useEffect( () => {
-    if ( !calendar || calendar?.disposed() ) {
-      return;
+  useEffect(() => {
+    if (!calendar || calendar?.disposed()) {
+      return
     }
 
-    const flattenSections = ( data: any[] ) => {
-      const events = [];
-      for ( const item of data ) {
-        if ( item.section ) {
-          for ( const session of item.section ) {
-            const itemCopy = { ...item };
-            delete itemCopy.section;
-            events.push( {
+    const flattenSections = (data: any[]) => {
+      const events = []
+      for (const item of data) {
+        if (item.section) {
+          for (const session of item.section) {
+            const itemCopy = { ...item }
+            delete itemCopy.section
+            events.push({
               ...itemCopy,
-              ...session
-            } );
+              ...session,
+            })
           }
         }
       }
-      return events;
-    };
+      return events
+    }
 
-    const formatEventDateTime = ( event: any, formattedDate: string ) => {
+    const formatEventDateTime = (event: any, formattedDate: string) => {
       return {
         ...event,
-        startTime: `${formattedDate}T${new Date(event.startTime).toLocaleTimeString( "en-US", {
-          hourCycle: "h24",
-          timeStyle: "medium"
+        startTime: `${formattedDate}T${new Date(event.startTime).toLocaleTimeString('en-US', {
+          hourCycle: 'h24',
+          timeStyle: 'medium',
         })}`,
-        endTime: `${formattedDate}T${new Date(event.endTime).toLocaleTimeString( "en-US", {
-          hourCycle: "h24",
-          timeStyle: "medium"
-        })}`
-      };
-    };
+        endTime: `${formattedDate}T${new Date(event.endTime).toLocaleTimeString('en-US', {
+          hourCycle: 'h24',
+          timeStyle: 'medium',
+        })}`,
+      }
+    }
 
-    const createCalendarEvent = ( event: any, idx: number, formattedDate: string ): DayPilot.EventData => {
-      const formattedEvent = formatEventDateTime( event, formattedDate );
+    const createCalendarEvent = (
+      event: any,
+      idx: number,
+      formattedDate: string,
+    ): DayPilot.EventData => {
+      const formattedEvent = formatEventDateTime(event, formattedDate)
+      console.log(event.id)
       return {
-        id: idx,
+        id: event.id,
         start: formattedEvent.startTime,
         end: formattedEvent.endTime,
-        text: event.name
-      };
-    };
+        text: event.name,
+      }
+    }
 
-    const transformToCalendarEvents = ( events: any[] ): DayPilot.EventData[] => {
-      return events.map( ( event, idx ) => {
-        const dayNumber = DAY_NAMES.indexOf( event.day as string );
-        const week = eachDayOfInterval( {
-          start: new Date( startDate ),
-          end: addDays( new Date( startDate ), 6 ),
-        } )
+    const transformToCalendarEvents = (events: any[]): DayPilot.EventData[] => {
+      return events.map((event, idx) => {
+        const dayNumber = DAY_NAMES.indexOf(event.day as string)
+        const week = eachDayOfInterval({
+          start: new Date(startDate),
+          end: addDays(new Date(startDate), 6),
+        })
 
-        const dayOfWeek = week.find( ( day ) => day.getDay() === dayNumber );
+        const dayOfWeek = week.find((day) => day.getDay() === dayNumber)
 
-        if( dayOfWeek === undefined ) throw new Error(
-          "Day not found in the week"
-        )
-        const formattedDate = format( dayOfWeek, "yyyy-MM-dd" );
+        if (dayOfWeek === undefined) throw new Error('Day not found in the week')
+        const formattedDate = format(dayOfWeek, 'yyyy-MM-dd')
 
-        return createCalendarEvent( event, idx, formattedDate );
-      } );
-    };
+        return createCalendarEvent(event, idx, formattedDate)
+      })
+    }
 
-    getClassSectionsByWeek().then( ( data ) => {
-      const flattenedEvents = flattenSections( data );
-      const calendarEvents = transformToCalendarEvents( flattenedEvents );
-      calendar.update( { events: calendarEvents } );
-    } );
+    getClassSectionsByWeek().then((data) => {
+      const flattenedEvents = flattenSections(data)
+      const calendarEvents = transformToCalendarEvents(flattenedEvents)
+      calendar.update({ events: calendarEvents })
+    })
+  }, [calendar, startDate])
 
-  }, [ calendar, startDate ] );
-
-  const handleEventClick = ( (event: { e: { data: any; }; }) => {
-    setModalData(event.e.data);
-  } )
+  const handleEventClick = (event: { e: { data: any } }) => {
+    if (event.e.data.id === undefined)
+      throw new Error(
+        'Event data is undefined. Please check if the event data is correctly passed to the handleEventClick function.',
+      )
+    getClassSectionByID(event.e.data.id).then((data) => {
+      if (data === undefined) throw new Error('Event data not found')
+      console.log(data)
+      setModalData(data)
+    })
+  }
 
   const value = useMemo(
     () => ({
       modalData,
-      setModalData
-    }), [modalData]
+      setModalData,
+    }),
+    [modalData],
   )
 
   return (
     <div className="container flex flex-row gap-4">
       <div>
         <DayPilotNavigator
-        onTimeRangeSelected={(args) => {
-          setStartDate(startOfWeek(args.day as SetStateAction<any>));
-        }}
-      /></div>
+          onTimeRangeSelected={(args) => {
+            setStartDate(startOfWeek(args.day as SetStateAction<any>))
+          }}
+        />
+      </div>
       <div>
         <DayPilotCalendar
           {...config}
@@ -124,11 +135,11 @@ export default function Calendar() {
           onEventClick={handleEventClick}
         />
       </div>
-      { modalData &&
-        <EventContext value={ value }>
+      {modalData && (
+        <EventContext value={value}>
           <Modal />
         </EventContext>
-      }
+      )}
     </div>
   )
 }

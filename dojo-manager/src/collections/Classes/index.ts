@@ -1,14 +1,13 @@
 import type { CollectionConfig } from 'payload'
 import { authenticated } from '@/access/authenticated'
 
-
 export const Classes: CollectionConfig = {
   slug: 'classes',
   access: {
     admin: authenticated,
     create: authenticated,
     delete: authenticated,
-    read: authenticated,
+    read: () => true,
     update: authenticated,
   },
   admin: {
@@ -19,12 +18,16 @@ export const Classes: CollectionConfig = {
     {
       name: 'name',
       type: 'text',
-      required: true
+      required: true,
+    },
+    {
+      name: 'description',
+      type: 'richText',
     },
     {
       name: 'program',
       type: 'relationship',
-      relationTo: 'programs'
+      relationTo: 'programs',
     },
     {
       name: 'section',
@@ -36,54 +39,53 @@ export const Classes: CollectionConfig = {
           options: [
             {
               label: 'Monday',
-              value: 'Monday'
+              value: 'Monday',
             },
             {
               label: 'Tuesday',
-              value: 'Tuesday'
+              value: 'Tuesday',
             },
             {
               label: 'Wednesday',
-              value: 'Wednesday'
+              value: 'Wednesday',
             },
             {
               label: 'Thursday',
-              value: 'Thursday'
+              value: 'Thursday',
             },
             {
               label: 'Friday',
-              value: 'Friday'
+              value: 'Friday',
             },
             {
               label: 'Saturday',
-              value: 'Saturday'
+              value: 'Saturday',
             },
             {
               label: 'Sunday',
-              value: 'Sunday'
+              value: 'Sunday',
             },
-          ]
+          ],
         },
         {
           name: 'startTime',
           type: 'date',
           admin: {
             date: {
-              pickerAppearance: 'timeOnly'
-            }
-          }
+              pickerAppearance: 'timeOnly',
+            },
+          },
         },
         {
           name: 'endTime',
           type: 'date',
           admin: {
             date: {
-              pickerAppearance: 'timeOnly'
-            }
-          }
-        }
-      ]
-    }
-
-  ]
+              pickerAppearance: 'timeOnly',
+            },
+          },
+        },
+      ],
+    },
+  ],
 }

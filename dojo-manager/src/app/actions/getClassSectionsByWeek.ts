@@ -10,6 +10,6 @@ export async function getClassSectionsByWeek()  {
   const sections = await payload.find({
     collection: 'classes'
   });
-  
+
   return sections.docs;
 }

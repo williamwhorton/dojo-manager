@@ -3,34 +3,40 @@
 import { useContext, useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-import { EventContext } from "@/app/(frontend)/calendar/calendar";
+import { EventContext } from '@/app/(frontend)/calendar/calendar'
+import { registerForClassById, checkInToClassById } from '@/app/actions/registerForClassById'
 
 export default function Modal() {
-  const {modalData, setModalData} = useContext(EventContext);
+  const { modalData, setModalData } = useContext(EventContext)
   const [open, setOpen] = useState(true)
 
-  const startTime = (modalData) ? new Date(modalData.start).toLocaleTimeString() : "";
-  const endTime = (modalData) ? new Date(modalData.end).toLocaleTimeString() : "";
+  const startTime = modalData ? new Date(modalData.start).toLocaleTimeString() : ''
+  const endTime = modalData ? new Date(modalData.end).toLocaleTimeString() : ''
+
+  const inProgress =
+    new Date(modalData.start).getTime() <= Date.now() &&
+    Date.now() <= new Date(modalData.end).getTime()
 
   const handleClose = () => {
-    setOpen(false);
-    setModalData(null);
+    setOpen(false)
+    setModalData(null)
+  }
+  const handleReserve = async () => {
+    await registerForClassById(modalData.id)
+    handleClose()
+  }
+  const handleCheckIn = async () => {
+    await checkInToClassById(modalData.id)
+    handleClose()
   }
 
   return (
     <div>
-      <button
-        onClick={() => setOpen(true)}
-        className="rounded-md bg-gray-950/5 px-2.5 py-1.5 text-sm font-semibold text-gray-900 hover:bg-gray-950/10"
-      >
-        Open dialog
-      </button>
       <Dialog open={open} onClose={handleClose} className="relative z-10">
         <DialogBackdrop
           transition
           className="fixed inset-0 bg-gray-500/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
         />
-
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             <DialogPanel
@@ -53,6 +59,10 @@ export default function Modal() {
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                {!inProgress && <button onClick={handleReserve}>Reserve Class</button>}
+                {inProgress && <button onClick={handleCheckIn}>Check In</button>}
               </div>
             </DialogPanel>
           </div>
